@@ -91,13 +91,15 @@ void midOrder2(BinaryTreeNode* root, process_func_ptr func_ptr) {
 
 	std::stack<BinaryTreeNode*> s;
 	std::vector<BinaryTreeNode*> v;
-	s.push(root);
 
-	while (!s.empty()) {
-		if (root) root = root->left;
-		if (root) {
+	s.push(root);
+	do 
+	{
+		if (root->left) {
+			root = root->left;
 			s.push(root);
-		}else{
+		}
+		else {
 			while (!s.empty()) {
 				BinaryTreeNode* node = s.top();
 				s.pop();
@@ -111,7 +113,9 @@ void midOrder2(BinaryTreeNode* root, process_func_ptr func_ptr) {
 				else continue;
 			}
 		}
-	}
+
+
+	} while (!s.empty());
 
 	for (int i = 0; i < v.size(); ++i) {
 		func_ptr(v[i]);
@@ -127,40 +131,33 @@ void postOrder2(BinaryTreeNode* root, process_func_ptr func_ptr) {
 	std::stack<BinaryTreeNode*> s;
 	std::vector<BinaryTreeNode*> v;
 
-	s.push(root);
-
-	while (!s.empty()) {
-		root = root->left;
-
-		if (root) {
+	do {
+		while (root) {
 			s.push(root);
+			root = root->left;
 		}
-		else {
-			while (!s.empty()) {
-				BinaryTreeNode* node = s.top();
-				//s.pop();
-				if (node) {
-					if (node->left && node->right) {
-						s.pop();
-					}
 
-					root = node->right;
-					if (root) {
-						s.push(root);
-						break;
-					}
-					else {
-						s.pop();
-						v.push_back(node);
-						continue;
-					}
-				}
+		int flag = 1;
+		BinaryTreeNode* last = NULL;
+		while (!s.empty() && flag == 1) {
+			BinaryTreeNode* node = s.top();
+
+			if (node->right == last) {
+				s.pop();
+				v.push_back(node);
+				last = node;
 			}
+			else {
+				root = node->right;
+				flag = 0;
+			}
+
 		}
 
 
 
-	}
+	} while (!s.empty());
+
 
 	for (int i = 0; i < v.size(); ++i) {
 		func_ptr(v[i]);
