@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stack>
 #include <vector>
-
+#include <exception>
 
 typedef struct BinaryTreeNode{
 	int val;
@@ -122,7 +122,6 @@ void midOrder2(BinaryTreeNode* root, process_func_ptr func_ptr) {
 	}
 
 }
-
 void postOrder2(BinaryTreeNode* root, process_func_ptr func_ptr) {
 	if (root == NULL) {
 		return;
@@ -164,7 +163,6 @@ void postOrder2(BinaryTreeNode* root, process_func_ptr func_ptr) {
 	}
 
 }
-
 void postOrder(BinaryTreeNode* root, process_func_ptr func_ptr) {
 	if (root == NULL) {
 		return;
@@ -177,9 +175,42 @@ void postOrder(BinaryTreeNode* root, process_func_ptr func_ptr) {
 }
 
 
+/*
+ÏÈÐò1 2 4 7 3 5 6 8
+ÖÐÐò4 7 2 1 5 3 8 6
+*/
 
+BinaryTreeNode* build_tree(int* preOrder, int preOrderLength, int* midOrder, int midOrderLength) {
+	if (preOrder == NULL || midOrder == NULL || preOrderLength != midOrderLength || preOrderLength == 0 || midOrderLength == 0) {
+		return;
+	}
 
+	return do_build_tree(preOrder,0,preOrderLength-1,midOrder,0,midOrderLength-1);
+}
 
+BinaryTreeNode* do_build_tree(int* preOrder, int startIndexPreOrder, int endIndexPreOrder, int* midOrder, int startIndexMidOrder, int endIndexMidOrder) {
+
+	BinaryTreeNode* root = new BinaryTreeNode;
+	root->left = root->right = NULL;
+	root->val = preOrder[startIndexPreOrder];
+
+	int startIndexMid = startIndexMidOrder;
+	bool found = false;
+	while (startIndexMid <= endIndexMidOrder) {
+		if (root->val == midOrder[startIndexMid]){
+			found = true;
+			break;
+		}
+		startIndexMid++;
+	}
+
+	if (found == false) {
+		throw std::exception("not found!\n");
+	}
+
+	root->left = do_build_tree(preOrder, startIndexPreOrder + 1, startIndexMid, midOrder, startIndexMidOrder, startIndexMid - 1);
+	root->right = do_build_tree(preOrder, startIndexMid + 1, endIndexPreOrder, midOrder, startIndexMid+1, endIndexMidOrder);
+}
 
 int main(int argc, char** argv) {
 
