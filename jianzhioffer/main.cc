@@ -179,53 +179,94 @@ void postOrder(BinaryTreeNode* root, process_func_ptr func_ptr) {
 先序1 2 4 7 3 5 6 8
 中序4 7 2 1 5 3 8 6
 */
-
-BinaryTreeNode* build_tree(int* preOrder, int preOrderLength, int* midOrder, int midOrderLength) {
-	if (preOrder == NULL || midOrder == NULL || preOrderLength != midOrderLength || preOrderLength == 0 || midOrderLength == 0) {
-		return;
-	}
-
-	return do_build_tree(preOrder,0,preOrderLength-1,midOrder,0,midOrderLength-1);
-}
-
-BinaryTreeNode* do_build_tree(int* preOrder, int startIndexPreOrder, int endIndexPreOrder, int* midOrder, int startIndexMidOrder, int endIndexMidOrder) {
+BinaryTreeNode* do_build_tree(int* startPreOrder, int* endPreOrder, int* startMidOrder, int* endMidOrder) {
 
 	BinaryTreeNode* root = new BinaryTreeNode;
 	root->left = root->right = NULL;
-	root->val = preOrder[startIndexPreOrder];
+	root->val = startPreOrder[0];
 
-	int startIndexMid = startIndexMidOrder;
-	bool found = false;
-	while (startIndexMid <= endIndexMidOrder) {
-		if (root->val == midOrder[startIndexMid]){
-			found = true;
+	if (startPreOrder == endPreOrder) {
+		if (startMidOrder == endMidOrder) {
+			return root;
+		}
+	}
+
+	int* pMidOrder = startMidOrder;
+	while (pMidOrder != endMidOrder) {
+		if (root->val == *pMidOrder) {
 			break;
 		}
-		startIndexMid++;
+
+		pMidOrder++;
 	}
 
-	if (found == false) {
-		throw std::exception("not found!\n");
+	int leftLength = 0;
+	if (root->val == *pMidOrder) {
+		leftLength = pMidOrder - startMidOrder;
+	}
+	else {
+		//if (pMidOrder == endMidOrder)
+		{
+			throw std::exception("not found!\n");
+		}
 	}
 
-	root->left = do_build_tree(preOrder, startIndexPreOrder + 1, startIndexMid, midOrder, startIndexMidOrder, startIndexMid - 1);
-	root->right = do_build_tree(preOrder, startIndexMid + 1, endIndexPreOrder, midOrder, startIndexMid+1, endIndexMidOrder);
+	if (leftLength > 0) {
+		root->left = do_build_tree(startPreOrder + 1, startPreOrder + leftLength, startMidOrder, pMidOrder-1);
+	}
+
+	if (endMidOrder - pMidOrder > 0) {
+		root->right = do_build_tree(startPreOrder + leftLength + 1, endPreOrder, pMidOrder + 1, endMidOrder);
+	}
+
+	return root;
 }
+BinaryTreeNode* build_tree(int* startPreOrder, int* startMidOrder, int length) {
+	if (startPreOrder == NULL || startMidOrder == NULL || length <= 0) {
+		return NULL;
+	}
+
+	return do_build_tree(startPreOrder, startPreOrder + length - 1, startMidOrder, startMidOrder + length - 1);
+}
+
+/*
+中序 d b h e i a f c g
+
+给定二叉树和其中一个节点 找出中序遍历的下一个节点。
+	   a
+	b      c
+  d   e  f   g
+    h   i
+*/
+
+
 
 int main(int argc, char** argv) {
 
-	BinaryTreeNode tree[] = { {10, &tree[1], &tree[2]},{ 6, &tree[3], &tree[4] },{ 14, &tree[5], &tree[6] },{ 4, NULL,NULL },{ 8,  NULL,NULL },{ 12, NULL,NULL },{ 16, NULL,NULL }};
-	fprintf(stdout, "\n");
-	preOrder(tree, printf_node);
-	fprintf(stdout, "\n");
-	midOrder(tree, printf_node);
-	fprintf(stdout, "\n");
-	postOrder(tree, printf_node);
-	fprintf(stdout, "\n");
-	preOrder2(tree, printf_node);
-	fprintf(stdout, "\n");
-	midOrder2(tree, printf_node);
-	fprintf(stdout, "\n");
-	postOrder2(tree, printf_node);
+	{
+		BinaryTreeNode tree[] = { {10, &tree[1], &tree[2]},{ 6, &tree[3], &tree[4] },{ 14, &tree[5], &tree[6] },{ 4, NULL,NULL },{ 8,  NULL,NULL },{ 12, NULL,NULL },{ 16, NULL,NULL } };
+		fprintf(stdout, "\n");
+		preOrder(tree, printf_node);
+		fprintf(stdout, "\n");
+		midOrder(tree, printf_node);
+		fprintf(stdout, "\n");
+		postOrder(tree, printf_node);
+		fprintf(stdout, "\n");
+		preOrder2(tree, printf_node);
+		fprintf(stdout, "\n");
+		midOrder2(tree, printf_node);
+		fprintf(stdout, "\n");
+		postOrder2(tree, printf_node);
+
+		fprintf(stdout, "\n build\n");
+
+		int preOrderArr[] = { 1, 2, 4, 7, 3, 5, 6, 8 };
+		int midOrderArr[] = { 4, 7, 2, 1, 5 ,3, 8, 6 };
+		BinaryTreeNode* tree2 = build_tree(preOrderArr, midOrderArr, sizeof midOrderArr / sizeof(int));
+		preOrder(tree2, printf_node);
+		fprintf(stdout, "\n");
+		midOrder(tree2, printf_node);
+	}
+
 	return 0;
 }
