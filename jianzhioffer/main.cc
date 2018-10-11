@@ -17,6 +17,8 @@ void printf_node(BinaryTreeNode* node) {
 }
 
 /*
+二叉树的先序 中序 后序 的递归和循环实现方式
+
 	10
   6		 14
 4  8   12   16
@@ -176,6 +178,57 @@ void postOrder(BinaryTreeNode* root, process_func_ptr func_ptr) {
 
 
 /*
+层次遍历,并分行
+*/
+
+void level_traversal(BinaryTreeNode* root) {
+	if (root == NULL)return;
+	std::stack<BinaryTreeNode*> s,s2;
+	std::stack<BinaryTreeNode*>* p1 = &s,*p2=&s2, *tmp;
+	p1->push(root);
+
+	do {
+	
+		while (!p1->empty()) {
+			BinaryTreeNode* node = p1->top();
+			p1->pop();
+			fprintf(stdout, "%d ", node->val);
+
+			if (node->right) p2->push(node->right);
+			if (node->left) p2->push(node->left);
+	
+		}
+
+		tmp = p1;
+		p1 = p2;
+		p2 = tmp;
+		
+		fprintf(stdout, "\n");
+
+	} while (!p1->empty());
+}
+
+/*
+求二叉树的高度 3种实现方式
+*/
+
+int tree_height(BinaryTreeNode* root) {
+	if (root == NULL) return 0;
+	if (root->left == NULL && root->right == NULL) return 0;
+
+	int l_h = 1 + tree_height(root->left);
+	int r_h = 1 + tree_height(root->right);
+
+	return l_h > r_h ? l_h : r_h;
+}
+
+int tree_height2(BinaryTreeNode* root) {
+	return 0;
+
+}
+
+
+/*
 先序1 2 4 7 3 5 6 8
 中序4 7 2 1 5 3 8 6
 */
@@ -205,7 +258,7 @@ BinaryTreeNode* do_build_tree(int* startPreOrder, int* endPreOrder, int* startMi
 		leftLength = pMidOrder - startMidOrder;
 	}
 	else {
-		//if (pMidOrder == endMidOrder)
+		if (pMidOrder == endMidOrder)
 		{
 			throw std::exception("not found!\n");
 		}
@@ -251,10 +304,33 @@ int frog_jump(int n) {
 	return frog_jump(n - 1) + frog_jump(n - 2);
 }
 
+/*
+斐波那契数列 1 1 2 3 5 8 13 21 ...
+*/
 int Fibonacci(int n) {
 	if (n <= 0) return 0;
 	if (n == 1 || n == 2)return 1;
 	return Fibonacci(n - 1) + Fibonacci(n - 2);
+}
+
+int Fibonacci2(int n) {
+	int result[] = { 0, 1,1 };
+	if (n <= 0)return result[0];
+	else if (n <= 2) result[n];
+	else {
+
+		int FibonacciOne = 1;
+		int FibonacciTwo = 0;
+		int ret = 0;
+
+		for (int i = 1; i < n; ++i) {
+			ret = FibonacciOne + FibonacciTwo;
+			FibonacciTwo = FibonacciOne;
+			FibonacciOne = ret;
+		}
+		return ret;
+	}
+
 }
 
 int main(int argc, char** argv) {
@@ -282,13 +358,21 @@ int main(int argc, char** argv) {
 		preOrder(tree2, printf_node);
 		fprintf(stdout, "\n");
 		midOrder(tree2, printf_node);
+
+		fprintf(stdout, "\ntree_height:tree:%d, tree2:%d\n", tree_height(tree), tree_height(tree2));
+
+		fprintf(stdout, "\n\n");
+		level_traversal(tree2);
+		fprintf(stdout, "\n\n");
 	}
 
 
 
 	fprintf(stdout, "\nfrog_jump:%d\n", frog_jump(30));
 
-	fprintf(stdout, "\Fibonacci:%d\n", Fibonacci(10));
+	fprintf(stdout, "\Fibonacci:%d\n", Fibonacci(30));
+
+	fprintf(stdout, "\Fibonacci2:%d\n", Fibonacci2(30));
 	return 0;
 }
 
