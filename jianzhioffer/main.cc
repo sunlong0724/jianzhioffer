@@ -239,7 +239,23 @@ BinaryTreeNode* build_tree(int* startPreOrder, int* startMidOrder, int length) {
     h   i
 */
 
+/*
+一只青蛙一次可以跳1级台阶，也可以跳2级台阶。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+n		1	2		3				4
+f(n)	1	2	f(2)+f(1)=3		f(3)+f(2)
+*/
 
+int frog_jump(int n) {
+	if (n <= 0)return 0;
+	if (n == 1 || n == 2) return n;
+	return frog_jump(n - 1) + frog_jump(n - 2);
+}
+
+int Fibonacci(int n) {
+	if (n <= 0) return 0;
+	if (n == 1 || n == 2)return 1;
+	return Fibonacci(n - 1) + Fibonacci(n - 2);
+}
 
 int main(int argc, char** argv) {
 
@@ -268,5 +284,13 @@ int main(int argc, char** argv) {
 		midOrder(tree2, printf_node);
 	}
 
+
+
+	fprintf(stdout, "\nfrog_jump:%d\n", frog_jump(30));
+
+	fprintf(stdout, "\Fibonacci:%d\n", Fibonacci(10));
 	return 0;
 }
+
+
+
