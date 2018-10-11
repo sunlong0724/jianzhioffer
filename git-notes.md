@@ -1,0 +1,8 @@
+
+master 主分支
+develop 开发分支，一般有本地master迁出。
+小团队一人开发，远程分支只需要一个mater分支就可，无需创建develop的远程分支，本地develop开发完成可以合并回本地master分支，然后再发布到远程master分支。
+多人开发时，从本地master迁出develop分支后，可以创建远程develop分支，开发完成后删除远程develop分支，合并本地develop分支回本地master分支，然后发布到远程master分支。
+
+
+
