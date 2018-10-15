@@ -187,15 +187,21 @@ void level_traversal(BinaryTreeNode* root) {
 	std::stack<BinaryTreeNode*>* p1 = &s,*p2=&s2, *tmp;
 	p1->push(root);
 
+	int height =0;
+
 	do {
 	
 		while (!p1->empty()) {
 			BinaryTreeNode* node = p1->top();
 			p1->pop();
-			fprintf(stdout, "%d ", node->val);
+			fprintf(stdout, "%d", node->val);
 
 			if (node->right) p2->push(node->right);
 			if (node->left) p2->push(node->left);
+
+			if (node->right || node->left) {
+				fprintf(stdout, " %d ", ++height);
+			}
 	
 		}
 
@@ -210,6 +216,9 @@ void level_traversal(BinaryTreeNode* root) {
 
 /*
 求二叉树的高度 3种实现方式
+递归
+后序遍历 栈的最大长度
+层序遍历栈的长度
 */
 
 int tree_height(BinaryTreeNode* root) {
@@ -223,7 +232,47 @@ int tree_height(BinaryTreeNode* root) {
 }
 
 int tree_height2(BinaryTreeNode* root) {
-	return 0;
+	std::stack<BinaryTreeNode*> s;
+	std::vector<BinaryTreeNode*> v;
+	if (root == NULL)
+		return 0;
+
+	int height = 0;
+	int cnt = -1;
+	do{
+		while(root) {
+			s.push(root);
+			root = root->left;
+			++cnt;
+		}
+
+
+		if (cnt > height) height = cnt;
+		BinaryTreeNode* last = NULL;// 记录上次访问的节点
+		int flag = 1;//需要访问站内节点
+		while (!s.empty() && flag == 1) {
+			BinaryTreeNode* node = s.top();
+			if (node->right == last) {
+				s.pop();
+				last = node;
+				--cnt;
+				//fprintf(stdout, "#%d ", node->val);
+				v.push_back(node);
+			}
+			else {
+				root = node->right;
+				flag = 0;//需要遍历该子树的节点以添加到栈里
+			}
+		}
+
+	}while (!s.empty());
+
+	for (auto a : v) {
+		fprintf(stdout, "%d ", a->val);
+	}
+
+
+	return height;
 
 }
 
@@ -360,6 +409,10 @@ int main(int argc, char** argv) {
 		midOrder(tree2, printf_node);
 
 		fprintf(stdout, "\ntree_height:tree:%d, tree2:%d\n", tree_height(tree), tree_height(tree2));
+		//fprintf(stdout, "\ntree_height2:tree:%d, tree2:%d\n", tree_height2(tree), tree_height2(tree2));
+		int h1 = tree_height2(tree);
+		int h2 = tree_height2(tree2);
+		fprintf(stdout, "\ntree_height2:tree:%d, tree2:%d\n", h1, h2);
 
 		fprintf(stdout, "\n\n");
 		level_traversal(tree2);
