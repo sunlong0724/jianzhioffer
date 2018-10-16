@@ -187,21 +187,16 @@ void level_traversal(BinaryTreeNode* root) {
 	std::stack<BinaryTreeNode*>* p1 = &s,*p2=&s2, *tmp;
 	p1->push(root);
 
-	int height =0;
+	int height =-1;
 
 	do {
 	
 		while (!p1->empty()) {
 			BinaryTreeNode* node = p1->top();
 			p1->pop();
-			fprintf(stdout, "%d", node->val);
-
 			if (node->right) p2->push(node->right);
 			if (node->left) p2->push(node->left);
 
-			if (node->right || node->left) {
-				fprintf(stdout, " %d ", ++height);
-			}
 	
 		}
 
@@ -209,7 +204,8 @@ void level_traversal(BinaryTreeNode* root) {
 		p1 = p2;
 		p2 = tmp;
 		
-		fprintf(stdout, "\n");
+		++height;
+		fprintf(stdout, " #%d# \n", height);
 
 	} while (!p1->empty());
 }
@@ -423,9 +419,9 @@ int main(int argc, char** argv) {
 
 	fprintf(stdout, "\nfrog_jump:%d\n", frog_jump(30));
 
-	fprintf(stdout, "\Fibonacci:%d\n", Fibonacci(30));
+	fprintf(stdout, "\nFibonacci:%d\n", Fibonacci(30));
 
-	fprintf(stdout, "\Fibonacci2:%d\n", Fibonacci2(30));
+	fprintf(stdout, "\nFibonacci2:%d\n", Fibonacci2(30));
 	return 0;
 }
 
