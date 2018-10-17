@@ -194,6 +194,7 @@ void level_traversal(BinaryTreeNode* root) {
 		while (!p1->empty()) {
 			BinaryTreeNode* node = p1->top();
 			p1->pop();
+			fprintf(stdout, "%d ", node->val);
 			if (node->right) p2->push(node->right);
 			if (node->left) p2->push(node->left);
 
@@ -205,11 +206,10 @@ void level_traversal(BinaryTreeNode* root) {
 		p2 = tmp;
 		
 		++height;
-		fprintf(stdout, " #%d# \n", height);
+		fprintf(stdout, " \n");
 
 	} while (!p1->empty());
 }
-
 /*
 求二叉树的高度 3种实现方式
 递归
@@ -226,7 +226,6 @@ int tree_height(BinaryTreeNode* root) {
 
 	return l_h > r_h ? l_h : r_h;
 }
-
 int tree_height2(BinaryTreeNode* root) {
 	std::stack<BinaryTreeNode*> s;
 	std::vector<BinaryTreeNode*> v;
@@ -271,6 +270,41 @@ int tree_height2(BinaryTreeNode* root) {
 	return height;
 
 }
+int tree_height3(BinaryTreeNode* root) {
+	std::stack<BinaryTreeNode*> s, s2, *tmp, *p,*p2;
+
+	if (root == NULL) {
+		return 0;
+	}
+
+	int height = -1;
+	p = &s;
+	p2 = &s2;
+	p->push(root);
+
+	do 
+	{
+		while (!p->empty())
+		{
+			BinaryTreeNode* node = p->top();
+			p->pop();
+
+			fprintf(stdout, "%d ", node->val);
+			
+			if (node->right)	p2->push(node->right);
+			if (node->left)		p2->push(node->left);
+		}
+
+		tmp = p;
+		p = p2;
+		p2 = tmp;
+
+		height++;
+		fprintf(stdout, " #%d# \n ", height);
+
+	} while (!p->empty());
+}
+
 
 
 /*
@@ -330,12 +364,50 @@ BinaryTreeNode* build_tree(int* startPreOrder, int* startMidOrder, int length) {
 /*
 中序 d b h e i a f c g
 
-给定二叉树和其中一个节点 找出中序遍历的下一个节点。
+给定二叉树和其中一个节点 找出中序遍历的下一个节点(每个节点包含一个指向父节点的指针)。
 	   a
 	b      c
   d   e  f   g
     h   i
 */
+typedef struct BinaryTreeNode2{
+	char	val;
+	struct BinaryTreeNode2* left;
+	struct BinaryTreeNode2* right;
+	struct BinaryTreeNode2* parent;
+}BinaryTreeNode2;
+
+BinaryTreeNode2* getNextNode(BinaryTreeNode2* pNode) {
+	if (pNode == NULL)return NULL;
+
+	BinaryTreeNode2* pNext = NULL;
+	//1.该节点有右子树，则其右子树的最左节点即为中序遍历的next节点
+	if (pNode->right != NULL) {
+		pNext = pNode->right;
+		while (pNext->left) {
+			pNext = pNext->left;
+		}
+	}
+	else {//2.1. 该节点无右子树，且其为其父节点的左子节点，其父节点即为中序遍历的next节点
+		if (pNode == pNode->parent->left) {
+			pNext = pNode->parent;
+		}
+		else {//2.2 该节点为无右子树，且其为其父节点的右子节点，则其祖父节点中的第一个为其父节点的左子节点的 节点 为 其 next节点。
+			pNext = pNode->parent;
+			do{
+				if (pNext && pNext == pNext->parent->left)
+					break;
+				pNext = pNext->parent;
+			} while (pNext);
+			if (pNext && pNext == pNext->parent->left)
+				pNext = pNext->parent;
+		}
+
+	}
+
+	return pNext;
+}
+
 
 /*
 一只青蛙一次可以跳1级台阶，也可以跳2级台阶。求该青蛙跳上一个n级的台阶总共有多少种跳法。
@@ -410,6 +482,10 @@ int main(int argc, char** argv) {
 		int h2 = tree_height2(tree2);
 		fprintf(stdout, "\ntree_height2:tree:%d, tree2:%d\n", h1, h2);
 
+		h1 = tree_height3(tree);
+		h2 = tree_height3(tree2);
+		fprintf(stdout, "\ntree_height3:tree:%d, tree2:%d\n", h1, h2);
+
 		fprintf(stdout, "\n\n");
 		level_traversal(tree2);
 		fprintf(stdout, "\n\n");
@@ -422,6 +498,27 @@ int main(int argc, char** argv) {
 	fprintf(stdout, "\nFibonacci:%d\n", Fibonacci(30));
 
 	fprintf(stdout, "\nFibonacci2:%d\n", Fibonacci2(30));
+
+	fprintf(stdout, "\n##################################\n");
+
+	/* a
+	b      c
+  d   e  f   g
+	h   i
+	*/
+	BinaryTreeNode2 tree_c[] = { {'a',&tree_c[1],&tree_c[2],NULL },{ 'b',&tree_c[3],&tree_c[4],&tree_c[0] },{ 'c',&tree_c[5],&tree_c[6],&tree_c[0] },
+									{ 'd',NULL,NULL,&tree_c[1] },{ 'e',&tree_c[7],&tree_c[8],&tree_c[1] },{ 'f',NULL,NULL,&tree_c[2] },{ 'g',NULL,NULL,&tree_c[2] },
+									{ 'h',NULL,NULL,&tree_c[4] },{ 'i',NULL,NULL,&tree_c[4] }
+								};
+
+	BinaryTreeNode2* node = getNextNode(&tree_c[8]);
+	if (node) {
+		fprintf(stdout, "getNextNode %c\n", node->val);
+	}
+	else {
+		fprintf(stdout, "getNextNode null\n");
+	}
+
 	return 0;
 }
 
