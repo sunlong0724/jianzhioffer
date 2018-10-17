@@ -305,7 +305,22 @@ int tree_height3(BinaryTreeNode* root) {
 	} while (!p->empty());
 }
 
+/*
+¶ş²æËÑË÷Ê÷
+*/
 
+bool bst(BinaryTreeNode* root, int key) {
+	if (root == NULL)
+		return false;
+
+	if (root->val == key)
+		return true;
+	else if (key < root->val) {
+		return bst(root->left, key);
+	}else {
+		return bst(root->right, key);
+	}
+}
 
 /*
 ÏÈĞò1 2 4 7 3 5 6 8
