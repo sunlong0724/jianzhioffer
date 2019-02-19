@@ -143,6 +143,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cc" />
+    <ClCompile Include="sort.cc" />
+    <ClCompile Include="sort0.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -465,7 +465,7 @@ int Fibonacci2(int n) {
 
 }
 
-int main(int argc, char** argv) {
+int main0000(int argc, char** argv) {
 
 	{
 		BinaryTreeNode tree[] = { {10, &tree[1], &tree[2]},{ 6, &tree[3], &tree[4] },{ 14, &tree[5], &tree[6] },{ 4, NULL,NULL },{ 8,  NULL,NULL },{ 12, NULL,NULL },{ 16, NULL,NULL } };
@@ -537,5 +537,315 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+#include <vector>
+using namespace std;
+bool IsPopOrder(vector<int> pushV, vector<int> popV) {
+	stack<int> pushS;
+	int i = 0, j = 0;
+	for (; i < popV.size(); ++i) {
+		if ( !pushS.empty() && popV[i] == pushS.top()) {
+			pushS.pop();
+			continue;
+		}
+		for (; j < pushV.size(); ++j) {
+			pushS.push(pushV[j]);
+			printf("%d,%d----> %d,%d\n", i,j,popV[i], pushS.top());
+			if (popV[i] == pushS.top()) {
+				
+				pushS.pop();
+				++j;
+				break;
+			}
+		}
+	}
+
+	printf("####%d,%d---->\n", i, j);
+	return pushS.empty();
+}
 
 
+
+
+
+
+bool DoVerifySquenceOfBST(vector<int>& v, int start, int end) {
+	if (start == end) return true;
+	int i = start;
+	int root_val = v[end];
+	for (; i < end; ++i) {
+		if (v[i] > root_val) {
+			break;
+		}
+	}
+
+	for (int j = i; j < end; ++j) {
+		if (v[j] < root_val) {
+			return false;
+		}
+	}
+
+	bool left = true, right = true;
+
+	if (i > start)
+		left = DoVerifySquenceOfBST(v, start, i - 1);
+
+	if (i < end - 1)
+		right = DoVerifySquenceOfBST(v, i, end - 1);
+
+	return left && right;
+
+}
+
+//后序遍历序列最后一个节点即为树的根节点
+bool VerifySquenceOfBST(vector<int> v) {
+	if (v.size() == 0) return false;
+
+	return DoVerifySquenceOfBST(v, 0, v.size() - 1);
+}
+
+void DoPermutation(vector<string>& v, string& str, int start) {
+	if (start >= str.size()) {
+		v.push_back(str);
+		return;
+	}
+	for (int i = start; i < str.size(); ++i) {
+		char t = str[start];
+		str[start] = str[i];
+		str[i] = t;
+
+		DoPermutation(v, str, start + 1);
+
+		t = str[i];
+		str[i] = str[start];
+		str[start] = t;
+	}
+}
+
+vector<string> Permutation(string str) {
+	vector<string> v;
+	if (str.size() == 0) return v;
+	DoPermutation(v, str, 0);
+	return v;
+}
+
+
+
+void Merge0(vector<int> &v, vector<int>&res, int left_start, int left_end,
+	int right_start, int right_end) {
+	int i = left_start;
+	int j = right_start;
+	int t = 0;
+
+	while (i <= left_end && j <= right_end) {
+		if (v[i] <= v[j]) {
+			res[t++] = v[i++];
+		}
+		else {
+			res[t++] = v[j++];
+		}
+	}
+
+	while (i <= left_end) res[t++] = v[i++];
+	while (j <= right_end) res[t++] = v[j++];
+
+	t = 0;
+	while (left_start <= right_end) v[left_start++] = res[t++];
+
+}
+
+
+void Merge(vector<int> &v, vector<int>&res, int left_start, int left_end,
+	int right_start, int right_end) {
+	int i = left_end;
+	int j = right_end;
+
+	int t = right_end;
+
+	while (i >= left_start && j >= right_start) {
+		if (v[i] > v[j]) {
+			res[t--] = v[i--];
+
+		}
+		else {
+			res[t--] = v[j--];
+		}
+	}
+
+	while (i >= left_start) res[t--] = v[i--];
+	while (j >= right_start) res[t--] = v[j--];
+	
+	t = left_start;
+	i = left_start;
+	while (i >= right_end) v[i++] = res[t++];
+
+	/*
+	t = right_end;
+	i = right_end;
+	while (i >= left_start) v[i--] = res[t--];
+	*/
+	int ss = -1;
+
+}
+
+void MergeSort(vector<int>& v, vector<int>& res, int start, int end) {
+
+	if (start < end) {
+		int mid = (start + end) / 2;
+		MergeSort(v, res,start, mid);
+		MergeSort(v, res, mid + 1, end);
+		Merge0(v, res, start, mid, mid + 1, end);
+	}
+}
+
+
+
+int main66(int argc, char** argv) {
+
+	/*int a = -3;
+	unsigned int b = a;
+	unsigned int c = (unsigned int)a;
+
+	printf("%d,%d,%d\n", a, b, c);
+
+	vector<int> v1 = { 1, 2, 3, 4, 5 };
+	vector<int> v2 = { 4, 5, 3, 2, 1 };
+
+	bool res = IsPopOrder(v1, v2);
+
+
+	vector<int> v = { 7,6,4,5 };
+
+	bool res = VerifySquenceOfBST(v);
+	
+
+	string str = "aa";
+	vector<string> res = Permutation(str);
+	for (int i = 0; i < res.size(); ++i) {
+		printf("%s\n", res[i].c_str());
+	}
+
+
+	int arr[sizeof (char)] = { 0 };
+	int i = sizeof arr;
+	*/
+
+	vector<int> arr = { 1,3,2,5,4,7,6,8 };
+	vector<int> res(arr.size(), 0x00);
+
+	MergeSort(arr, res, 0, arr.size() -1);
+
+	printf("\n arr:");
+	for (int i = 0; i < arr.size(); ++i) {
+		printf("%d,", arr[i]);
+	}
+
+
+	printf("\n result:");
+	for (int i = 0; i < res.size(); ++i) {
+		printf("%d,", res[i]);
+	}
+
+	printf("\n");
+	return 0;
+}
+
+/*
+
+链接：https://www.nowcoder.com/questionTerminal/fe6b651b66ae47d7acce78ffdd9a96c7
+来源：牛客网
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+public class Solution {
+	public ArrayList<String> Permutation(String str) {
+		List<String> resultList = new ArrayList<>();
+		if (str.length() == 0)
+			return (ArrayList)resultList;
+		//递归的初始值为（str数组，空的list，初始下标0）
+		fun(str.toCharArray(), resultList, 0);
+		Collections.sort(resultList);
+		return (ArrayList)resultList;
+	}
+
+	private void fun(char[] ch, List<String> list, int i) {
+		//这是递归的终止条件，就是i下标已经移到char数组的末尾的时候，考虑添加这一组字符串进入结果集中
+		if (i == ch.length - 1) {
+			//判断一下是否重复
+			if (!list.contains(new String(ch))) {
+				list.add(new String(ch));
+				return;
+			}
+		}
+		else {
+			//这一段就是回溯法，这里以"abc"为例
+
+			//递归的思想与栈的入栈和出栈是一样的,某一个状态遇到return结束了之后，会回到被调用的地方继续执行
+
+			//1.第一次进到这里是ch=['a','b','c'],list=[],i=0，我称为 状态A ，即初始状态
+			//那么j=0，swap(ch,0,0)，就是['a','b','c']，进入递归，自己调自己，只是i为1，交换(0,0)位置之后的状态我称为 状态B 
+			//i不等于2，来到这里，j=1，执行第一个swap(ch,1,1)，这个状态我称为 状态C1 ,再进入fun函数，此时标记为T1，i为2，那么这时就进入上一个if，将"abc"放进list中
+			/////////////-------》此时结果集为["abc"]
+
+			//2.执行完list.add之后，遇到return，回退到T1处，接下来执行第二个swap(ch,1,1)，状态C1又恢复为状态B
+			//恢复完之后，继续执行for循环，此时j=2,那么swap(ch,1,2),得到"acb"，这个状态我称为C2,然后执行fun，此时标记为T2,发现i+1=2,所以也被添加进结果集，此时return回退到T2处往下执行
+			/////////////-------》此时结果集为["abc","acb"]
+			//然后执行第二个swap(ch,1,2)，状态C2回归状态B,然后状态B的for循环退出回到状态A
+
+			//             a|b|c(状态A)
+			//               |
+			//               |swap(0,0)
+			//               |
+			//             a|b|c(状态B)
+			//             /  \
+			            //   swap(1,1)/    \swap(1,2)  (状态C1和状态C2)
+//           /      \
+            //         a|b|c   a|c|b
+
+//3.回到状态A之后，继续for循环，j=1,即swap(ch,0,1)，即"bac",这个状态可以再次叫做状态A,下面的步骤同上
+/////////////-------》此时结果集为["abc","acb","bac","bca"]
+
+//             a|b|c(状态A)
+//               |
+//               |swap(0,1)
+//               |
+//             b|a|c(状态B)
+//             /  \
+            //   swap(1,1)/    \swap(1,2)  (状态C1和状态C2)
+//           /      \
+            //         b|a|c   b|c|a
+
+//4.再继续for循环，j=2,即swap(ch,0,2)，即"cab",这个状态可以再次叫做状态A，下面的步骤同上
+/////////////-------》此时结果集为["abc","acb","bac","bca","cab","cba"]
+
+//             a|b|c(状态A)
+//               |
+//               |swap(0,2)
+//               |
+//             c|b|a(状态B)
+//             /  \
+            //   swap(1,1)/    \swap(1,2)  (状态C1和状态C2)
+//           /      \
+            //         c|b|a   c|a|b
+
+//5.最后退出for循环，结束。
+
+			for (int j = i; j < ch.length; j++) {
+				swap(ch, i, j);
+				fun(ch, list, i + 1);
+				swap(ch, i, j);
+			}
+		}
+	}
+
+	//交换数组的两个下标的元素
+	private void swap(char[] str, int i, int j) {
+		if (i != j) {
+			char t = str[i];
+			str[i] = str[j];
+			str[j] = t;
+		}
+	}
+}
+
+*/
