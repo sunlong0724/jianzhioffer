@@ -219,6 +219,8 @@ void HeapSort2(vector<int> & v) {
 二叉排序树基础上增加平衡因子
 
 */
+#include "AvlTree.h"
+
 int main(int argc, char**argv) {
 	vector<int> vv{ 16, 7, 3, 20, 17, 8 };
 	vector<int> v;
@@ -247,6 +249,27 @@ int main(int argc, char**argv) {
 	print_arr(v);
 	QuickSort(v);
 	print_arr(v);
+
+	fprintf(stdout, "*****************AVLTree*******************************\n");
+	AvlTree<int> tree;
+	tree.Insert(tree.m_root, 1);
+	tree.Insert(tree.m_root, 2);
+	tree.Insert(tree.m_root, 3);
+	tree.Insert(tree.m_root, 4);
+	tree.Insert(tree.m_root, 5);
+	tree.Insert(tree.m_root, 6);
+	tree.Insert(tree.m_root, 7);
+	tree.Insert(tree.m_root, 8);
+	tree.Insert(tree.m_root, 9);
+	tree.Insert(tree.m_root, 10);
+	tree.Insert(tree.m_root, 11);
+	tree.Insert(tree.m_root, 12);
+	tree.Insert(tree.m_root, 13);
+	tree.Insert(tree.m_root, 14);
+	tree.Insert(tree.m_root, 15);
+
+	tree.InorderTraversal(tree.m_root);
+	return 0;
 
 	return 0;
 }
