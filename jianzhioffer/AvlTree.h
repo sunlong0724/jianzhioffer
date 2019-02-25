@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef __AVLTREE_H__
+#define __AVLTREE_H__
+#include <algorithm>
 
 template <typename T>
 struct AvlNode {
@@ -12,12 +15,12 @@ struct AvlNode {
 template <typename T>
 class AvlTree {
 public:
-	AvlTree<T>() {}
+	AvlTree<T>():m_root(NULL) {}
 	~AvlTree<T>(){}
 
-	void Insert(AvlNode<T> *&t, T x);
-	bool Delete(AvlNode<T> *&t, T x);
-	bool Contains(AvlNode<T> *t, const T t) const;
+	void Insert(AvlNode<T> *&root, T x);
+	bool Delete(AvlNode<T> *&root, T x);
+	bool Contains(AvlNode<T> *root, const T t) const;
 	void InorderTraversal(AvlNode<T>*t);
 	void PreorderTraversal(AvlNode<T>*t);
 	
@@ -41,7 +44,7 @@ private:
 	AvlNode<T>* RL(AvlNode<T> *t);
 
 public:
-	AvlNode<T> *root;
+	AvlNode<T> *m_root;
 };
 
 
@@ -94,5 +97,61 @@ AvlNode<T>* AvlTree<T>::RR(AvlNode<T> *t) {
 
 template <typename T>
 AvlNode<T>* AvlTree<T>::LR(AvlNode<T> *t) {
-	AvlNode<T>* p = RR(t->left);
+	t->left = RR(t->left);
+	return LL(t);
 }
+
+template <typename T>
+AvlNode<T>* AvlTree<T>::RL(AvlNode<T>* t) {
+	t->right = LL(t->right);
+	return RR(t);
+}
+
+template<typename T>
+void AvlTree<T>::Insert(AvlNode<T> *&root, T x) {
+	if (root == NULL) {
+		root = new AvlNode<T>(x);
+		if (!root) {
+			fprintf(stdout, "new failed!\n");
+			exit(-1);
+		}
+	}
+	else if ( x < root->data) {
+		Insert(root->left, x);
+		if (GetHeight(root->left) - GetHeight(root->right) == 2) {
+			if (x < root->left->data) {//×ó×óÇé¿ö£¬ÓÒÐý
+				root = LL(root);
+			}
+			else {//×óÓÒÇé¿ö£¬Ë«Ðý×ª£¬ÏÈ×óÐýºóÓÒÐý
+				root = LR(root);
+			}
+		}
+	}
+	else if (x > root->data) {
+		Insert(root->right, x);
+		if (GetHeight(root->right) - GetHeight(root->left) == 2) {
+			if (x > root->right->data) {//ÓÒÓÒÇé¿ö£¬×óÐý
+				root = RR(root);
+			}
+			else {//ÓÒ×óÇé¿ö£¬Ë«Ðý×ª£¬ÏÈÓÒÐýºó×óÐý
+				root = RL(root);
+			}
+		}
+	}
+	else {//==
+
+	}
+	root->height = std::max(GetHeight(root->left), GetHeight(root->right)) + 1;
+}
+
+template <typename T>
+void AvlTree<T>::InorderTraversal(AvlNode<T>* t) {
+
+	if (t) {
+		InorderTraversal(t->left);
+		fprintf(stdout, "%d,", t->data);
+		InorderTraversal(t->right);
+	}
+}
+#endif // !__AVLTREE_H__
+
