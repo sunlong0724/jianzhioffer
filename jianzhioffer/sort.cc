@@ -269,8 +269,12 @@ int main(int argc, char**argv) {
 	tree.Insert(tree.m_root, 15);
 
 	tree.InorderTraversal(tree.m_root);
-	return 0;
 
+	tree.Delete(tree.m_root, 11);
+
+	tree.InorderTraversal(tree.m_root);
+
+	fprintf(stdout,"\n%d\n", tree.Contains(tree.m_root, 11));
 	return 0;
 }
 
