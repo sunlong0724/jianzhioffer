@@ -69,7 +69,7 @@ int AvlTree<T>::GetHeight(AvlNode<T> *t) {
 }
 
 
-/*单旋转。左左插入导致的不平衡，向右旋转。也叫右旋转。
+/*单旋转。左左插入导致的不平衡，向右旋转。也叫右旋转。函数名LL。
 */
 template <typename T>
 AvlNode<T>* AvlTree<T>::LL(AvlNode<T>* t) {
@@ -83,6 +83,9 @@ AvlNode<T>* AvlTree<T>::LL(AvlNode<T>* t) {
 	return p;
 }
 
+/*
+单旋转。右右插入导致的不平衡，向左旋转。也叫左旋转。函数名RR。
+*/
 template <typename T>
 AvlNode<T>* AvlTree<T>::RR(AvlNode<T> *t) {
 	AvlNode<T>* p = t->right;
@@ -95,12 +98,18 @@ AvlNode<T>* AvlTree<T>::RR(AvlNode<T> *t) {
 	return p;
 }
 
+/*
+左右子树上插入导致的不平衡。先以左子树节点为根节点向左旋转(RR),然后再以原来的根节点为基准向右旋转（LL）。
+*/
 template <typename T>
 AvlNode<T>* AvlTree<T>::LR(AvlNode<T> *t) {
 	t->left = RR(t->left);
 	return LL(t);
 }
 
+/*
+右左子树上插入导致的不平衡。先以右子树节点为根节点向右旋转（LL），然后再以原来的根节点为基准向左旋转（RR）。
+*/
 template <typename T>
 AvlNode<T>* AvlTree<T>::RL(AvlNode<T>* t) {
 	t->right = LL(t->right);
@@ -143,83 +152,6 @@ void AvlTree<T>::Insert(AvlNode<T> *&root, T x) {
 	}
 	root->height = std::max(GetHeight(root->left), GetHeight(root->right)) + 1;
 }
-
-template <typename T>
-bool AvlTree<T>::Delete(AvlNode<T>* &t, T x) {
-	if (t == NULL) {
-		return false;
-	}
-	else if (t->data == x) {
-		if (t->left != NULL &&t->right != NULL) {
-
-			//左子树高度达，左子树中的最大节点的值赋值给本节点，然后删除最大节点
-			if (GetHeight(t->left) > GetHeight(t->right)) {
-				t->data = FindMax(t->left)->data;
-				Delete(t->left, t->data);
-			}
-			else {//右子树高度大，右子树中的最小节点赋值给本节点，然后删除该最小节点。
-				t->data = FindMin(t->right)->data;
-				Delete(t->right, t->data);
-			}
-		}
-		else {//左右子树有一个不为空，直接有需要删除的子节点替换即可。
-			AvlNode<T>*old = t;
-			t = t->left ? t->left : t->right;
-			delete old;
-		}
-	}
-	else if (x < t->data) {
-		//在左子树树上查找并删除
-		Delete(t->left, x);
-		//判断是否满足平衡条件
-		if (GetHeight(t->right) - GetHeight(t->left) > 1) {
-			if (GetHeight(t->right->left) > GetHeight(t->right->right)) {
-				//双旋转
-				t = RL(t);
-			}
-			else {
-				//RR单旋
-				t = RR(t);
-			}
-		}
-		else {//满足平衡性，更新高度值
-			t->height = max(GetHeight(t->left), GetHeight(t->right)) + 1;
-		}
-	}
-	else {//要删除的节点在右子树上
-		Delete(t->right, x);
-		if (GetHeight(t->left) - GetHeight(t->right) > 1) {
-			if (GetHeight(t->left->right) > GetHeight(t->left->left)) {
-				//LR双旋
-				t = LR(t);
-			}
-			else {
-				//LL单旋
-				t = LL(t);
-			}
-		}
-		else {
-			t->height = max(GetHeight(t->left), GetHeight(t->right)) + 1;
-		}
-	}
-
-	return true;
-}
-
-template <typename T>
-bool AvlTree<T>::Contains(AvlNode<T>* t, const T x) const {
-	if (t == NULL) return false;
-	if (x < t->data) {
-		return Contains(t->left, x);
-	}
-	else if (x > t->data) {
-		return Contains(t->right, x);
-	}
-	else
-		return true;
-}
-
-
 
 template <typename T>
 void AvlTree<T>::InorderTraversal(AvlNode<T>* t) {
