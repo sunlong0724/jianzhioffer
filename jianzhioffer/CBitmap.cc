@@ -4,13 +4,13 @@ private:
 	const static unsigned int UINT_BITS = sizeof(unsigned int);
 	const static unsigned int SHIFT = UINT_BITS +1;
 	const static unsigned int MASK = 0x1F;
-	const static unsigned int MAX_NUMBER_VALUE = (long long)(1024ll * 1024ll * 1024ll * 4ll) -1;//40ÒÚ B¡¢KB¡¢MB¡¢GB¡£
+	const static unsigned int MAX_NUMBER_VALUE = (long long)(1024ll * 1024ll * 1024ll * 4ll) -1;//40äº¿ Bã€KBã€MBã€GBã€‚
 	const static long long count = ((long long)MAX_NUMBER_VALUE + 1) / UINT_BITS / 8;
-		  static unsigned int ARR[count];// MAX_NUMBER_VALUE / UINT_BITS¸öintµÄÊý×é¡£  ¿ÉÒÔ´æ·Å MAX_NUMBER_VALUE / UINT_BITS * 8(bit)
+		  static unsigned int ARR[count];// MAX_NUMBER_VALUE / UINT_BITSä¸ªintçš„æ•°ç»„ã€‚  å¯ä»¥å­˜æ”¾ MAX_NUMBER_VALUE / UINT_BITS * 8(bit)
 
 public:
 
-	//i >> SHIFT ¶¨Î»µ½ÄÄ¸öbuket£¬ÔÚbuketÄÚÔÙÆ«ÒÆµ½¶ÔÓ¦µÄbitÎ»ÖÃ¡£
+	//i >> SHIFT å®šä½åˆ°å“ªä¸ªbuketï¼Œåœ¨buketå†…å†åç§»åˆ°å¯¹åº”çš„bitä½ç½®ã€‚
 	void set(unsigned int i) {
 		ARR[i >> SHIFT] |= (1 << (i & MASK));
 	}
@@ -74,3 +74,6 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
+
+
+//http://wuchong.me/blog/2014/07/28/permutation-and-combination-realize/
