@@ -78,4 +78,5 @@ int main(int argc, char** argv) {
 
 //http://wuchong.me/blog/2014/07/28/permutation-and-combination-realize/
 
-//https://blog.csdn.net/morewindows/article/details/7370155
+//https://blog.csdn.net/morewindows/article/details/7370155 
+// https://blog.csdn.net/qq_42552533/article/details/88606550
