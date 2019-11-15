@@ -199,8 +199,10 @@ int main56(int argc, char** argv) {
 //https://www.zhihu.com/question/2399518//
 //https://www.luogu.org/blog/pks-LOVING/junior-dynamic-programming-dong-tai-gui-hua-chu-bu-ge-zhong-zi-xu-lie
 
+//https://www.zhihu.com/question/39948290?sort=created
+
 
 //例题1 凑出某个金额w，需要用到尽量少的钞票
 //例题2 DAG最短路 给定一个城市的地图，所有的道路都是单行道，而且不会构成环。每条道路都有过路费，问您从S点到T点花费的最少费用。
 //例题3 最长上升子序列
-
+//例题4 挖金矿
